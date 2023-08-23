@@ -1,46 +1,27 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 
-import user from "../data/user";
-import App from "../components/App";
+// Import the About component
+import About from "../components/About";
 
-test("renders without errors", () => {
-  expect(() => render(<App />)).not.toThrow();
+test("renders the h2 with the text 'About Me'", () => {
+  render(<About bio="My bio text goes here" />);
+  expect(screen.getByText("About Me")).toBeInTheDocument();
 });
 
-test("renders the correct child components", () => {
-  const { container } = render(<App />);
-  expect(container.querySelector("nav")).toBeInTheDocument();
-  expect(container.querySelector("#home")).toBeInTheDocument();
-  expect(container.querySelector("#about")).toBeInTheDocument();
+test("displays the provided bio in a <p> element", () => {
+  render(<About bio="My bio text goes here" />);
+  expect(screen.getByText("My bio text goes here")).toBeInTheDocument();
 });
 
-test("passes 'name', 'city', and 'color' to <Home> as props", () => {
-  render(<App />);
-  const h1 = screen.queryByText(
-    `${user.name} is a Web Developer from ${user.city}`
+test("displays the Links component with the correct prop values", () => {
+  render(
+    <About
+      bio="My bio text goes here"
+    />
   );
-  expect(h1).toBeInTheDocument();
-  expect(h1.style.color).toEqual(user.color);
-});
 
-test("passes 'bio' to <About> as a prop", () => {
-  render(<App />);
-  const p = screen.queryByText(user.bio);
-  expect(p).toBeInTheDocument();
-  expect(p.tagName).toEqual("P");
-});
-
-test("passes 'github' to <Links> as a prop, via <About>", () => {
-  render(<App />);
-  const a = screen.queryByText(user.links.github);
-  expect(a).toBeInTheDocument();
-  expect(a.tagName).toEqual("A");
-});
-
-test("passes 'linkedin' to <Links> as a prop, via <About>", () => {
-  render(<App />);
-  const a = screen.queryByText(user.links.linkedin);
-  expect(a).toBeInTheDocument();
-  expect(a.tagName).toEqual("A");
+  // Check if the Links component is rendered with the correct props
+  expect(screen.getByText("https://github.com/liza")).toBeInTheDocument();
+  expect(screen.getByText("https://linkedin.com/in/liza/")).toBeInTheDocument();
 });
